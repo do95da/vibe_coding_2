@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NVIDIA 역사 (NV1 → RTX 50) — 세대별 스펙/특장점 블로그</title>
+  <meta name="description" content="NVIDIA NV1부터 RTX 50 시리즈까지의 역사, 세대별 스펙과 특장점 비교를 최신 스크롤형 블로그 UI로 정리했습니다." />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #121417;
+      --muted: #6b7280;
+      --card: #f9fafb;
+      --border: #e5e7eb;
+      --accent: #2563eb;
+      --accent-2: #1d4ed8;
+      --code: #0f172a;
+      --radius: 18px;
+      --shadow: 0 10px 25px rgba(2,6,23,.08);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      line-height: 1.6;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover {
+      color: var(--accent-2);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: saturate(180%) blur(10px);
+      background: rgba(255,255,255,0.7);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .brand .logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg,#60a5fa,#22d3ee);
+      box-shadow: var(--shadow);
+    }
+    .brand .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+    .brand h1 {
+      font-size: 18px;
+      margin: 0;
+    }
+    .badge {
+      font-size: 12px;
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--muted);
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 28px;
+      margin-top: 18px;
+    }
+    @media (max-width: 960px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .toc {
+        position: static;
+      }
+    }
+    .toc {
+      position: sticky;
+      top: 76px;
+      align-self: start;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .toc h3 {
+      margin: 0 0 12px 0;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .toc a {
+      display: block;
+      padding: 8px 10px;
+      margin: 2px 0;
+      border-radius: 10px;
+      color: var(--text);
+    }
+    .toc a.active,
+    .toc a:hover {
+      background: #eaf1ff;
+    }
+    .article {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .hero {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      background: var(--card);
+    }
+    .hero .grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 6px;
+      padding: 6px;
+    }
+    .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 12px;
+    }
+    .hero .caption {
+      padding: 10px 16px 16px 16px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    @media (max-width: 960px) {
+      .hero .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    section.card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+    section.card h2 {
+      margin: 0 0 8px 0;
+    }
+    section.card p.lead {
+      color: #334155;
+      margin-top: 0;
+    }
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+    .tl-item {
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      gap: 18px;
+      padding: 14px;
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      background: #fff;
+    }
+    .tl-item .year {
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .chip {
+      font-size: 12px;
+      padding: 4px 10px;
+      background: #eef2ff;
+      color: #1e3a8a;
+      border-radius: 999px;
+      border: 1px solid #dbeafe;
+    }
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+    table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      min-width: 880px;
+    }
+    thead th {
+      position: sticky;
+      top: 0;
+      background: #f3f4f6;
+      color: #374151;
+      font-weight: 700;
+      border-bottom: 1px solid var(--border);
+      padding: 12px;
+      text-align: left;
+    }
+    tbody td {
+      border-bottom: 1px solid var(--border);
+      padding: 12px;
+      vertical-align: top;
+      background: #fff;
+    }
+    tbody tr:hover td {
+      background: #f9fbff;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .gallery .card-img {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .gallery .card-img img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      display: block;
+    }
+    .gallery .card-img .label {
+      padding: 10px 12px;
+      font-weight: 600;
+    }
+    @media (max-width: 960px) {
+      .gallery {
+        grid-template-columns: 1fr;
+      }
+      .gallery .card-img img {
+        height: 220px;
+      }
+    }
+    .top-btn {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      padding: 12px 14px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .note {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .kbd {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      background: #f1f5f9;
+      color: var(--code);
+      padding: 2px 6px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+    .footer {
+      margin: 28px 0 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: #f8fbff;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand">
+<div class="logo">
+  <img
+    src="https://nvidianews.nvidia.com/_gallery/get_file/?file_id=544a6120f6091d588d000048"
+    alt="NVIDIA 로고"
+    width="180" height="39"
+    style="width:36px;height:36px;object-fit:contain;border-radius:10px"
+    onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Nvidia_logo.png/600px-Nvidia_logo.png';"/>
+</div>
+        <h1>NVIDIA 역사: NV1 → RTX 50</h1>
+      </div>
+      <span class="badge">최신 UI · 스크롤 블로그</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <article class="article">
+      <section class="hero" aria-label="대표 이미지">
+        <div class="grid">
+          <img loading="lazy" alt="GeForce RTX 5090 (Palit GameRock, Blackwell)"
+               src="https://upload.wikimedia.org/wikipedia/commons/5/5a/Palit_GeForce_RTX_5090_Gamerock_20250530_HOF4166_RAW-Export.png" />
+          <div style="display:grid; gap:6px">
+            <img loading="lazy" alt="GeForce RTX 4090 (ASUS ROG Strix)"
+                 src="https://upload.wikimedia.org/wikipedia/commons/7/76/Asus_Strix_RTX_4090.jpg" />
+            <img loading="lazy" alt="GeForce 256 (VisionTek DDR)"
+                 src="https://upload.wikimedia.org/wikipedia/commons/e/e1/VisionTek_GeForce_256.jpg" />
+          </div>
+        </div>
+        <p class="caption">모든 이미지는 Wikimedia Commons의 원본 파일을 사용했습니다. 각 파일의 라이선스 표기는 본문 하단에 정리했습니다.</p>
+      </section>
+
+      <div class="layout">
+        <nav class="toc" id="toc">
+          <h3>콘텐츠 목차</h3>
+          <a href="#intro" class="active">소개</a>
+          <a href="#timeline">세대별 하이라이트</a>
+          <a href="#mo-disease">모델병 특장점</a>
+          <a href="#spec-table">세대별 스펙 비교표</a>
+          <a href="#rtx50">RTX 50 스냅샷</a>
+          <a href="#guide">구매·활용 가이드</a>
+        </nav>
+        <div>
+          <section class="card" id="intro">
+            <h2>NV1부터 RTX 50(Blackwell)까지 — 한눈에 보는 흐름</h2>
+            <p class="lead">
+              초기 <strong>NV1(1995)</strong>의 실험적 시도부터 <strong>RTX 50(2025)</strong>의 GDDR7·DLSS 4에 이르기까지,
+              NVIDIA GPU의 기술 진화를 **블로그 스크롤**에 최적화된 최신 UI로 정리했습니다.
+            </p>
+            <div class="callout">
+              <strong>작성 메모</strong> — 본 글은 사용자가 요청한 “프롬프트 결과 내용”을 블로그용 HTML로 재구성한 것입니다.
+              세부 수치(코어 수·클럭·TDP 등)는 SKU/리비전에 따라 달라질 수 있으니 공식 스펙 확인을 권장합니다.
+            </div>
+          </section>
+
+          <section class="card" id="timeline">
+            <h2>세대별 하이라이트 타임라인</h2>
+            <div class="timeline">
+              <div class="tl-item">
+                <div class="year">1995 · NV1</div>
+                <div>
+                  세가 새턴 이식 친화의 <strong>Quadratic Texture Mapping</strong> 채택. DirectX의 삼각형 표준과 어긋나 주류화 실패.
+                  <div class="chips"><span class="chip">QTM</span><span class="chip">멀티미디어 통합</span></div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="year">1997 · RIVA 128</div>
+                <div>
+                  Direct3D 5 & OpenGL 가속 대응. NV1의 독자 노선에서 **삼각형 기반 렌더링**으로 전환하며 흥행 발판 마련.
+                  <div class="chips"><span class="chip">350 nm</span><span class="chip">100 MHz</span></div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="year">1999 · GeForce 256</div>
+                <div>
+                  세계 최초 “<strong>GPU</strong>” 마케팅과 <strong>하드웨어 T&amp;L</strong> 도입으로 3D 파이프라인을 본격 가속.
+                  <div class="chips"><span class="chip">HW T&amp;L</span><span class="chip">SDR/DDR</span></div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="year">2006 · GeForce 8 (G80)</div>
+                <div>
+                  <strong>유니파이드 셰이더</strong>·CUDA의 토대. 프로그래머블 시대의 유연성을 실사용으로 끌어올림.
+                  <div class="chips"><span class="chip">Unified Shader</span><span class="chip">CUDA</span></div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="year">2018 · Turing</div>
+                <div>
+                  <strong>RT 코어·Tensor 코어</strong>로 실시간 레이트레이싱·DLSS 시대 개막(RTX 20/16).
+                  <div class="chips"><span class="chip">GDDR6</span><span class="chip">DLSS 1</span></div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="year">2022 · Ada</div>
+                <div>
+                  RTX 40: <strong>RT 3세대 / Tensor 4세대</strong>로 레이트레이싱·프레임 생성 체감 대폭 상승.
+                  <div class="chips"><span class="chip">GDDR6X</span><span class="chip">DLSS 3</span></div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="year">2025 · Blackwell</div>
+                <div>
+                  RTX 50: <strong>GDDR7</strong>, <strong>DLSS 4</strong>, PCIe 5.0 등 차세대화.
+                  <div class="chips"><span class="chip">GDDR7</span><span class="chip">DLSS 4</span><span class="chip">PCIe 5.0</span></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card" id="mo-disease">
+            <h2>세대별 “모델병” 특장점 요약</h2>
+            <ul>
+              <li><strong>NV1</strong> — 표준과 다른 QTM 중심: 콘솔‧멀티미디어 지향의 독자 노선이 단명 요인.</li>
+              <li><strong>RIVA → GeForce 256</strong> — 표준 API 준수 + <em>HW T&amp;L</em>로 PC 3D 가속 주류 확립.</li>
+              <li><strong>GeForce 8 (G80)</strong> — 유니파이드 셰이더로 셰이더 유연성·CUDA 생태계 기반 확립.</li>
+              <li><strong>Turing</strong> — RT/Tensor 코어로 레이트레이싱·AI 업스케일링(DLSS) 상용화.</li>
+              <li><strong>Ada</strong> — 프레임 생성·RT 3세대 강화로 레이트레이싱 체감성 대폭 개선.</li>
+              <li><strong>Blackwell</strong> — GDDR7·DLSS 4·PCIe 5.0 등으로 차세대 성능·대역폭·AI 그래픽 강화.</li>
+            </ul>
+          </section>
+
+          <section class="card" id="spec-table">
+            <h2>세대별 스펙 · 사양 비교표 (대표 모델 기준)</h2>
+            <p class="note">※ 대표/플래그십 위주 요약입니다. 세부 SKU별 수치는 다를 수 있습니다.</p>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>세대(연도)</th>
+                    <th>아키텍처/공정</th>
+                    <th>대표 모델</th>
+                    <th>메모리 세대</th>
+                    <th>대표 신기능 · 특징</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>NV1 (1995)</td>
+                    <td>NV1 / 500 nm</td>
+                    <td>Diamond Edge 3D</td>
+                    <td>FPM/VRAM 2 MB</td>
+                    <td>Quadratic Texture Mapping, 멀티미디어 통합, DirectX 표준과 불일치</td>
+                  </tr>
+                  <tr>
+                    <td>RIVA 128 (1997)</td>
+                    <td>NV3 / 350 nm</td>
+                    <td>RIVA 128 / 128ZX</td>
+                    <td>SGRAM 4–8 MB</td>
+                    <td>Direct3D / OpenGL 가속, ~100 MHz, 16-bit 3D 제한</td>
+                  </tr>
+                  <tr>
+                    <td>GeForce 256 (1999)</td>
+                    <td>NV10 / 220 nm</td>
+                    <td>GeForce 256</td>
+                    <td>SDR / DDR</td>
+                    <td><strong>하드웨어 T&amp;L</strong> 도입으로 ‘GPU’ 시대 개막</td>
+                  </tr>
+                  <tr>
+                    <td>GeForce 3/4 (2001-02)</td>
+                    <td>NV20/25</td>
+                    <td>Ti 500 / Ti 4600</td>
+                    <td>DDR</td>
+                    <td>프로그래머블 셰이더 대중화 (픽셀/버텍스)</td>
+                  </tr>
+                  <tr>
+                    <td>GeForce 8 (2006)</td>
+                    <td>G80 / 90 nm</td>
+                    <td>8800 GTX</td>
+                    <td>GDDR3</td>
+                    <td><strong>유니파이드 셰이더</strong>, CUDA 토대</td>
+                  </tr>
+                  <tr>
+                    <td>Fermi (2010)</td>
+                    <td>GF100 / 40 nm</td>
+                    <td>GTX 480</td>
+                    <td>GDDR5</td>
+                    <td>GPGPU / Compute 강화</td>
+                  </tr>
+                  <tr>
+                    <td>Kepler/Maxwell (2012-14)</td>
+                    <td>GK/GM / 28 nm</td>
+                    <td>GTX 780 / 980</td>
+                    <td>GDDR5</td>
+                    <td>전성비 개선 (특히 Maxwell)</td>
+                  </tr>
+                  <tr>
+                    <td>Pascal (2016)</td>
+                    <td>GP10x / 16 nm</td>
+                    <td>GTX 1080 / 1080 Ti</td>
+                    <td>GDDR5X</td>
+                    <td>대중적 고성능·전성비 점프</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Turing (2018)</strong></td>
+                    <td><strong>TU10x / 12 nm</strong></td>
+                    <td><strong>RTX 2080 Ti</strong></td>
+                    <td>GDDR6</td>
+                    <td><strong>RT 코어·Tensor 코어</strong>, DLSS 1</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Ampere (2020)</strong></td>
+                    <td><strong>GA10x / 8 nm</strong></td>
+                    <td><strong>RTX 3090</strong></td>
+                    <td>GDDR6X</td>
+                    <td>RT/Tensor 2세대, 4K 고프레임 보편화</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Ada (2022)</strong></td>
+                    <td><strong>AD10x / TSMC 4N</strong></td>
+                    <td><strong>RTX 4090</strong></td>
+                    <td>GDDR6X</td>
+                    <td><strong>RT 3세대 / Tensor 4세대</strong>, DLSS 3(프레임생성)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Blackwell (2025)</strong></td>
+                    <td><strong>GB20x / TSMC 4N</strong></td>
+                    <td><strong>RTX 5090 / 5080</strong></td>
+                    <td><strong>GDDR7</strong></td>
+                    <td>DLSS 4, PCIe 5.0, 차세대 AI·대역폭 강화</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="card" id="rtx50">
+            <h2>RTX 50 시리즈(Blackwell) — 스냅샷</h2>
+            <ul>
+              <li><strong>출시 흐름</strong>: 5090·5080 선행 → 5070 Ti/5070 후속.</li>
+              <li><strong>핵심 포인트</strong>: GDDR7, DLSS 4, PCIe 5.0, 신형 쿨링 설계(FE 논의 등).</li>
+              <li><strong>구매 체크</strong>: 케이스 길이/두께, 전원 커넥터(12V-2×6 등), 파워 용량 호환성 확인.</li>
+            </ul>
+          </section>
+
+          <section class="card" id="guide">
+            <h2>구매 · 활용 Quick 가이드</h2>
+            <ul>
+              <li><strong>레이트레이싱/AI 업스케일링 중시</strong> → RTX 40 이상 추천, 50 시리즈면 DLSS 4로 더 유리.</li>
+              <li><strong>전성비·발열 고려</strong> → 세대가 올라갈수록 성능은↑, 전원/케이스 호환성 점검 필수.</li>
+              <li><strong>레트로 수집</strong> → NV1/RIVA는 호환성 제약이 커 수집/연구 목적에 적합.</li>
+            </ul>
+            <p class="note">엑셀/CSV 형태의 <span class="kbd">세부 스펙표(코어·클럭·대역폭·TDP)</span>가 필요하시면 알려주세요. 즉시 내보내기 버전으로 제공해 드립니다.</p>
+          </section>
+
+          <div class="footer">
+            © <span id="year"></span> NVIDIA 역사 정리 · 작성자: 우호(블로그 기재용)  
+            <br />
+            <small>라이선스 및 출처:  
+            <a href="https://commons.wikimedia.org/wiki/File:Diamond_Edge_3D_3400.jpg" target="_blank">NV1 이미지</a>,  
+            <a href="https://commons.wikimedia.org/wiki/File:VisionTek_GeForce_256.jpg" target="_blank">GeForce 256 이미지</a>,  
+            <a href="https://commons.wikimedia.org/wiki/File:Asus_Strix_RTX_4090.jpg" target="_blank">RTX 4090 이미지</a>,  
+            <a href="https://commons.wikimedia.org/wiki/File:Palit_GeForce_RTX_5090_Gamerock_20250530_HOF4166_RAW-Export.png" target="_blank">RTX 5090 이미지</a>.</small>
+          </div>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <button class="top-btn" onclick="window.scrollTo({ top:0, behavior:'smooth' })" aria-label="맨 위로">▲ 맨 위</button>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const tocLinks = [...document.querySelectorAll('#toc a')];
+    const sections = tocLinks.map(a => document.querySelector(a.getAttribute('href')));
+    const activate = (id) => {
+      tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+    };
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) activate(entry.target.id);
+      });
+    }, { rootMargin: "-30% 0px -60% 0px", threshold: 0 });
+    sections.forEach(sec => sec && observer.observe(sec));
+  </script>
+</body>
+</html>
